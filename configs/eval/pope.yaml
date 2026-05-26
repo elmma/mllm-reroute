@@ -1,0 +1,6 @@
+# POPE (Polling-based Object Probing Evaluation)
+# Tests object hallucination with yes/no questions
+benchmarks:
+  - pope
+batch_size: 1
+log_samples: false

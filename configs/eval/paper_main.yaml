@@ -1,0 +1,14 @@
+# Paper §4.2 main table — all benchmarks in a single eval pass.
+# POPE + 8 RefCOCO/+/g grounding splits.
+benchmarks:
+  - pope
+  - refcoco_bbox_rec_val
+  - refcoco_bbox_rec_testA
+  - refcoco_bbox_rec_testB
+  - refcoco+_bbox_rec_val
+  - refcoco+_bbox_rec_testA
+  - refcoco+_bbox_rec_testB
+  - refcocog_bbox_rec_val
+  - refcocog_bbox_rec_test
+batch_size: 1
+log_samples: true

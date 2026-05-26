@@ -1,0 +1,17 @@
+# @package _global_
+# Qwen2.5-VL-7B + FastV K=3 (vanilla physical_delete) at avg_T = 192.
+# Schedule keep_ratio=0.2644 matches LLaVA-1.5 reference.
+defaults:
+  - /eval: pope
+  - /model: qwen25vl_7b
+  - _self_
+
+routing:
+  method: fastv
+  action: physical_delete
+  scoring_layer: 3
+  keep_ratio: 0.2644
+
+eval:
+  batch_size: 1
+  log_samples: true

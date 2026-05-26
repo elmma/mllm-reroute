@@ -1,0 +1,12 @@
+# Qwen2.5-VL-7B in HuggingFace transformers format.
+# Second-target release model (after LLaVA-1.5-7B).
+#
+# max_pixels cap matches the iso-576-token convention used in our paper
+# tables: Qwen2.5-VL uses patch=14 merge=2 → 28² = 784 pixels per visual
+# token, so 576 × 784 = 451584. Without this cap, lmms-eval defaults to
+# 2048 visual tokens and silently breaks the keep_ratio calibration.
+pretrained: Qwen/Qwen2.5-VL-7B-Instruct
+lmms_model_type: qwen2_5_vl
+attn_implementation: sdpa
+num_layers: 28
+max_pixels: 451584

@@ -1,0 +1,17 @@
+# @package _global_
+# LLaVA-1.5-7B + PDrop early-L2 vanilla physical_delete @ avg_T = 128.
+defaults:
+  - /eval: pope
+  - /model: llava15_7b_hf
+  - _self_
+
+routing:
+  method: pdrop
+  action: physical_delete
+  monotonic: true
+  drop_layers: [2, 7, 15, 23]
+  keep_ratios: [0.4570, 0.2088, 0.0954, 0.0436]
+
+eval:
+  batch_size: 1
+  log_samples: true

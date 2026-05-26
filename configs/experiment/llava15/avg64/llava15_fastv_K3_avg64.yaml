@@ -1,0 +1,16 @@
+# @package _global_
+# LLaVA-1.5-7B + FastV K=3 vanilla physical_delete @ avg_T = 64.
+defaults:
+  - /eval: pope
+  - /model: llava15_7b_hf
+  - _self_
+
+routing:
+  method: fastv
+  action: physical_delete
+  scoring_layer: 3
+  keep_ratio: 0.01916
+
+eval:
+  batch_size: 1
+  log_samples: true

@@ -1,0 +1,15 @@
+# @package _global_
+# Qwen2.5-VL-7B baseline — no routing.
+defaults:
+  - /eval: pope
+  - /model: qwen25vl_7b
+  - _self_
+
+routing:
+  method: none
+  action: none
+  keep_ratio: 1.0
+
+eval:
+  batch_size: 1
+  log_samples: true

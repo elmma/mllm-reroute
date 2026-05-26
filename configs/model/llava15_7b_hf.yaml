@@ -1,0 +1,6 @@
+# LLaVA-1.5-7B in HuggingFace transformers format.
+# This is the canonical release model — paper §4.2 main table.
+pretrained: llava-hf/llava-1.5-7b-hf
+lmms_model_type: llava_hf
+attn_implementation: sdpa  # scoring layer captures Q,K via hooks; rest sdpa
+num_layers: 32

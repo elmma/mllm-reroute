@@ -1,0 +1,19 @@
+# @package _global_
+# Qwen2.5-VL-7B + Ours-vs-FastV reroute (Ours-vs-FastV head-to-head).
+# Schedule keep_ratios FROZEN to LLaVA flat reference; drop_layers
+# normalized for Qwen 28-layer LLM: LLaVA [3,7,15,23] → Qwen [3,6,13,20].
+defaults:
+  - /eval: pope
+  - /model: qwen25vl_7b
+  - _self_
+
+routing:
+  method: pdrop
+  action: compact_route
+  monotonic: false
+  drop_layers: [3, 6, 13, 20]
+  keep_ratios: [0.2644, 0.2644, 0.2644, 0.2644]
+
+eval:
+  batch_size: 1
+  log_samples: true

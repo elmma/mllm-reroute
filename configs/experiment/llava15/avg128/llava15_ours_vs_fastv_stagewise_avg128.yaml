@@ -1,0 +1,19 @@
+# @package _global_
+# LLaVA-1.5-7B + Ours-vs-FastV reroute, stagewise compact dispatch @ avg_T = 128.
+# Same routing as llava15_ours_vs_fastv_avg128; stays compact across in-stage non-routing
+# layers (memory bandwidth saving). Bit-identical accuracy to llava15_ours_vs_fastv_avg128.
+defaults:
+  - /eval: pope
+  - /model: llava15_7b_hf
+  - _self_
+
+routing:
+  method: pdrop
+  action: compact_route_stagewise
+  monotonic: false
+  drop_layers: [3, 7, 15, 23]
+  keep_ratios: [0.1418, 0.1418, 0.1418, 0.1418]
+
+eval:
+  batch_size: 1
+  log_samples: true

@@ -1,0 +1,17 @@
+# @package _global_
+# LLaVA-1.5-7B + Ours-vs-PDrop reroute (pyramid-keep schedule) @ avg_T = 64.
+defaults:
+  - /eval: pope
+  - /model: llava15_7b_hf
+  - _self_
+
+routing:
+  method: pdrop
+  action: compact_route
+  monotonic: false
+  drop_layers: [2, 7, 15, 23]
+  keep_ratios: [0.1392, 0.1392, 0.0696, 0.0348]
+
+eval:
+  batch_size: 1
+  log_samples: true

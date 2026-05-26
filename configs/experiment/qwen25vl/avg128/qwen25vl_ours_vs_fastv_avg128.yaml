@@ -1,0 +1,18 @@
+# @package _global_
+# Qwen2.5-VL-7B + Ours-vs-FastV reroute @ avg_T = 128.
+# Head-to-head vs FastV K=3 @ avg128.
+defaults:
+  - /eval: pope
+  - /model: qwen25vl_7b
+  - _self_
+
+routing:
+  method: pdrop
+  action: compact_route
+  monotonic: false
+  drop_layers: [3, 6, 13, 20]
+  keep_ratios: [0.1418, 0.1418, 0.1418, 0.1418]
+
+eval:
+  batch_size: 1
+  log_samples: true

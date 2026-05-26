@@ -1,0 +1,22 @@
+# @package _global_
+# LLaVA-1.5-7B + Ours-vs-FastV reroute (uniform-keep schedule), stagewise compact dispatch.
+# Same routing decisions as llava15_ours_vs_fastv_avg192; differs only in inter-layer
+# tensor layout: sequence stays compact across in-stage non-routing layers,
+# avoiding the per-layer gather/scatter that vanilla compact_route does.
+#
+# Accuracy bit-identical to llava15_ours_vs_fastv_avg192; saves memory bandwidth.
+defaults:
+  - /eval: pope
+  - /model: llava15_7b_hf
+  - _self_
+
+routing:
+  method: pdrop
+  action: compact_route_stagewise
+  monotonic: false
+  drop_layers: [3, 7, 15, 23]
+  keep_ratios: [0.2644, 0.2644, 0.2644, 0.2644]
+
+eval:
+  batch_size: 1
+  log_samples: true

@@ -1,0 +1,6 @@
+# MMBench English dev (validation) set.
+# Test set requires online submission — use dev for local eval.
+benchmarks:
+  - mmbench_en_dev
+batch_size: 1
+log_samples: false

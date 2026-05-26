@@ -1,0 +1,21 @@
+# @package _global_
+# LLaVA-1.5-7B + Ours-vs-PDrop reroute (pyramid-keep schedule) @ avg_T = 192.
+# [alpha, alpha, alpha/2, alpha/4] keep shape; alpha=0.4502 backward-solved
+# for avg_T=192 with drop_layers=[2,7,15,23].
+# Same drop-layer topology as PDrop earlyL2; differs by action=compact_route
+# + monotonic=false (recoverable routing).
+defaults:
+  - /eval: pope
+  - /model: llava15_7b_hf
+  - _self_
+
+routing:
+  method: pdrop
+  action: compact_route
+  monotonic: false
+  drop_layers: [2, 7, 15, 23]
+  keep_ratios: [0.4502, 0.4502, 0.2251, 0.1126]
+
+eval:
+  batch_size: 1
+  log_samples: true

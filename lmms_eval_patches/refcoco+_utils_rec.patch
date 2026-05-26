@@ -1,0 +1,90 @@
+--- lmms_eval/tasks/refcoco+/utils_rec.py	2026-03-15 09:15:06.000000000 +0800
++++ lmms_eval/tasks/refcoco+/utils_rec.py	2026-04-22 01:36:06.060474192 +0800
+@@ -1,4 +1,5 @@
+ import logging
++import os
+ import re
+ 
+ from datasets import Dataset
+@@ -7,6 +8,20 @@
+ 
+ COCO_REC_METRICS = ["IoU", "ACC@0.1", "ACC@0.3", "ACC@0.5", "ACC@0.7", "ACC@0.9", "Center_ACC"]
+ 
++# Bbox coordinate format: MUST be set via BBOX_COORD_FORMAT env var by the
++# evaluation script (run_eval.py) or shell before invoking lmms-eval.
++# Strict: process_result raises ValueError if not one of the three below.
++# "pixel"      = pixel coords, divide by image dims (Qwen2.5-VL)
++# "scale_1000" = 0-1000 normalized, divide by 1000 (Qwen2-VL, Qwen3-VL, Qwen3.5)
++# "normalized" = already [0,1], no conversion (LLaVA)
++BBOX_COORD_FORMAT = os.environ.get("BBOX_COORD_FORMAT", "unset")
++
++# Prompt style: controls the user instruction sent to the model.
++# "full"  = lmms-eval default Shikra/KOSMOS-2 prompt (long; says "bounded 0-1")
++# "short" = trimmed — drop format spec, keep the ask + caption
++# "nuwa"  = Nuwa official Qwen grounding prompt: "Locate X ... JSON format."
++REFCOCO_PROMPT_STYLE = os.environ.get("REFCOCO_PROMPT_STYLE", "full")
++
+ 
+ def refcoco_bbox_rec_preprocess_dataset(dataset: Dataset):
+     # PIL image stored in dataset['image']
+@@ -47,6 +62,12 @@
+ 
+ def refcoco_bbox_rec_doc_to_text(doc):
+     assert isinstance(doc["answer"], str), "Answer must be a string"
++    caption = doc["answer"]
++    style = os.environ.get("REFCOCO_PROMPT_STYLE", REFCOCO_PROMPT_STYLE)
++    if style == "short":
++        return "Please provide the bounding box coordinate of the region this sentence describes: " + caption
++    if style == "nuwa":
++        return f"Locate {caption} in this image and output the bbox coordinates in JSON format."
+     return (
+         "Bounding box coordinates are specified in the format (top-left x, top-left y, bottom-right x, bottom-right y). All values are floating point numbers bounded between 0 and 1. Please provide the bounding box coordinate of the region this sentence describes: "
+         + doc["answer"]
+@@ -73,6 +94,12 @@
+     if match:
+         return [float(match.group(i)) for i in range(1, 5)]
+ 
++    # Also try parentheses format (some models like Qwen3-VL output (x, y, x, y))
++    pattern_paren = r"\(\s*(-?\d+(?:\.\d+)?),\s*(-?\d+(?:\.\d+)?),\s*(-?\d+(?:\.\d+)?),\s*(-?\d+(?:\.\d+)?)\s*\)"
++    match = re.search(pattern_paren, input_str)
++    if match:
++        return [float(match.group(i)) for i in range(1, 5)]
++
+     # If the input does not contain the pattern, return the null float sequence
+     return [0, 0, 0, 0]
+ 
+@@ -85,8 +112,32 @@
+     Returns:
+         a dictionary with key: metric name, value: metric value
+     """
+-    pred = result[0] if len(result) > 0 else ""
+-    pred = parse_float_sequence_within(pred)
++    raw_pred = result[0] if len(result) > 0 else ""
++    pred = parse_float_sequence_within(raw_pred)
++
++    # Normalize non-[0,1] coordinates to [0,1].
++    # BBOX_COORD_FORMAT must be set explicitly (by run_eval.py or shell).
++    # No silent heuristic fallback: wrong format on a model silently produces
++    # garbage IoU, which is how Gate-0.4 hit 0% ACC@0.5 before. Fail loudly.
++    #   "pixel"      -> divide by image dims (Qwen2.5-VL)
++    #   "scale_1000" -> divide by 1000 (Qwen2-VL, Qwen3-VL, Qwen3.5)
++    #   "normalized" -> already [0,1], no conversion (LLaVA)
++    if BBOX_COORD_FORMAT not in ("pixel", "scale_1000", "normalized"):
++        raise ValueError(
++            "BBOX_COORD_FORMAT must be one of 'pixel'|'scale_1000'|'normalized'; "
++            "got %r. Set it via run_eval.py model_family map or `export "
++            "BBOX_COORD_FORMAT=...` in your shell before launching lmms-eval."
++            % BBOX_COORD_FORMAT
++        )
++    if any(v > 1.0 for v in pred):
++        w = doc.get("image_width", 0)
++        h = doc.get("image_height", 0)
++        if BBOX_COORD_FORMAT == "pixel" and w > 0 and h > 0:
++            pred = [pred[0] / w, pred[1] / h, pred[2] / w, pred[3] / h]
++        elif BBOX_COORD_FORMAT == "scale_1000":
++            pred = [v / 1000.0 for v in pred]
++        # "normalized" and any `v>1.0` survivor: model misbehavior — let it score 0
++
+     ann_id = doc["question_id"]
+     data_dict = {"answer": doc["answer"], "pred": pred, "ann_id": ann_id, "bbox": doc["bbox"]}
+     return {f"refcoco_{metric}": data_dict for metric in COCO_REC_METRICS}

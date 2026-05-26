@@ -1,0 +1,5 @@
+# GQA testdev (12578 samples) — general-domain VQA signal.
+benchmarks:
+  - gqa
+batch_size: 1
+log_samples: false

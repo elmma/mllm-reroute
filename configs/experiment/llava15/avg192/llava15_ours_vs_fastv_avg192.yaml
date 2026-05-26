@@ -1,0 +1,22 @@
+# @package _global_
+# LLaVA-1.5-7B + Ours-vs-FastV reroute (uniform-keep schedule) @ avg_T = 192.
+# Head-to-head vs FastV K=3: matches its avg_T exactly but uses 4 drop
+# layers with flat keep=0.2644 + compact_route (recoverable) + monotonic=false
+# (re-routing at L=7/15/23 can re-include deferred tokens).
+#
+# avg_T = (3*576 + 29*0.2644*576) / 32 = 192.0 — FLOPs-matched to FastV K=3.
+defaults:
+  - /eval: pope
+  - /model: llava15_7b_hf
+  - _self_
+
+routing:
+  method: pdrop
+  action: compact_route
+  monotonic: false
+  drop_layers: [3, 7, 15, 23]
+  keep_ratios: [0.2644, 0.2644, 0.2644, 0.2644]
+
+eval:
+  batch_size: 1
+  log_samples: true

@@ -1,0 +1,20 @@
+# @package _global_
+# LLaVA-1.5-7B + Ours-vs-PDrop reroute, stagewise compact dispatch @ avg_T = 64.
+# Same routing decisions as llava15_ours_vs_pdrop_avg64; stays compact
+# across in-stage non-routing layers (memory-bandwidth saving, runtime
+# variant). Bit-identical accuracy to ours_vs_pdrop_avg64.
+defaults:
+  - /eval: pope
+  - /model: llava15_7b_hf
+  - _self_
+
+routing:
+  method: pdrop
+  action: compact_route_stagewise
+  monotonic: false
+  drop_layers: [2, 7, 15, 23]
+  keep_ratios: [0.1392, 0.1392, 0.0696, 0.0348]
+
+eval:
+  batch_size: 1
+  log_samples: true

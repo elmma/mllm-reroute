@@ -1,0 +1,16 @@
+# @package _global_
+# Baseline — no routing, full 576 visual tokens (LLaVA-1.5 fixed).
+# Reference upper bound for the release reproducibility table.
+defaults:
+  - /eval: pope
+  - /model: llava15_7b_hf
+  - _self_
+
+routing:
+  method: none
+  action: none
+  keep_ratio: 1.0
+
+eval:
+  batch_size: 1
+  log_samples: true

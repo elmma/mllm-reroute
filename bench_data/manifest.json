@@ -1,0 +1,35 @@
+[
+  {
+    "sample_id": 0,
+    "image_id": "COCO_val2014_000000310196",
+    "category": "coco_describe",
+    "question": "Describe this image in detail.",
+    "image": "sample_00.jpg",
+    "image_WxH": [
+      640,
+      427
+    ]
+  },
+  {
+    "sample_id": 1,
+    "image_id": "COCO_val2014_000000210789",
+    "category": "coco_describe",
+    "question": "Describe this image in detail.",
+    "image": "sample_01.jpg",
+    "image_WxH": [
+      369,
+      520
+    ]
+  },
+  {
+    "sample_id": 2,
+    "image_id": "COCO_val2014_000000429109",
+    "category": "coco_describe",
+    "question": "Describe this image in detail.",
+    "image": "sample_02.jpg",
+    "image_WxH": [
+      640,
+      427
+    ]
+  }
+]

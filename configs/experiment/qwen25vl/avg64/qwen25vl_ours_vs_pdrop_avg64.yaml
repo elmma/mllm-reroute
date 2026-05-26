@@ -1,0 +1,17 @@
+# @package _global_
+# Qwen2.5-VL-7B + Ours-vs-PDrop reroute @ avg_T = 64.
+defaults:
+  - /eval: pope
+  - /model: qwen25vl_7b
+  - _self_
+
+routing:
+  method: pdrop
+  action: compact_route
+  monotonic: false
+  drop_layers: [2, 6, 13, 20]
+  keep_ratios: [0.1392, 0.1392, 0.0696, 0.0348]
+
+eval:
+  batch_size: 1
+  log_samples: true

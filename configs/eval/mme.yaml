@@ -1,0 +1,5 @@
+# MME — multimodal perception + cognition benchmark (2374 samples).
+benchmarks:
+  - mme
+batch_size: 1
+log_samples: false

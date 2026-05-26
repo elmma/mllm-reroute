@@ -1,0 +1,20 @@
+# @package _global_
+# LLaVA-1.5-7B + PDrop early-L2 vanilla physical_delete @ avg_T = 192.
+# Multi-stage cascade: drop_layers=[2,7,15,23], cumulative keep_ratios
+# [0.5965, 0.3558, 0.2123, 0.1266], monotonic=true (tokens dropped at
+# earlier stages cannot be re-selected).
+defaults:
+  - /eval: pope
+  - /model: llava15_7b_hf
+  - _self_
+
+routing:
+  method: pdrop
+  action: physical_delete
+  monotonic: true
+  drop_layers: [2, 7, 15, 23]
+  keep_ratios: [0.5965, 0.3558, 0.2123, 0.1266]
+
+eval:
+  batch_size: 1
+  log_samples: true

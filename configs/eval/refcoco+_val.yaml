@@ -1,0 +1,4 @@
+benchmarks:
+  - refcoco+_bbox_rec_val
+batch_size: 1
+log_samples: true

@@ -1,7 +1,9 @@
 # Reroute: Recoverable Visual Token Routing
 
+**[Paper](https://arxiv.org/abs/2606.12412)**
+
 Codebase for reproducing the paper's main table
-(LLaVA-1.5-7B and Qwen2.5-VL-7B on POPE / VQA / RefCOCO) and the
+(LLaVA-1.5-7B and Qwen2.5-VL-7B on VQA / RefCOCO) and the
 efficiency analysis (TFLOPs + KV cache).
 
 ## Quick links
@@ -138,3 +140,19 @@ the authors of [FastV](https://github.com/pkunlp-icler/FastV),
 [p-MoD](https://github.com/MCG-NJU/p-MoD), and
 [NuWA](https://github.com/Man-PaperRejected/Nuwa) for their inspiring work and
 publicly available resources.
+
+## Citation
+
+```
+@misc{yang2026reroutedontremoverecoverable,
+      title={Reroute, Don't Remove: Recoverable Visual Token Routing for Vision-Language Models}, 
+      author={Cheng-Yu Yang and Shao-Yuan Lo and Yu-Lun Liu},
+      year={2026},
+      eprint={2606.12412},
+      archivePrefix={arXiv},
+      primaryClass={cs.CV},
+      url={https://arxiv.org/abs/2606.12412}, 
+}
+```
+
+    
